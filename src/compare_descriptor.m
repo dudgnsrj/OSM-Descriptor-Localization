@@ -22,13 +22,13 @@ num_bin = 360;
 N = 200; % Top N
 
 %% File name
-pc_descriptor_rot_inv_path = '/media/iris/Data-Younghun/KITTI_semantic/dataset/sequences/00/descriptor_360_rotinv.csv';
-pc_descriptor_path = '/media/iris/Data-Younghun/KITTI_semantic/dataset/sequences/00/descriptor_360.csv';
-pc_pose_path = '/media/iris/Data-Younghun/KITTI_RAW/2011_10_03/2011_10_03_drive_0027_sync/oxts/data';
+pc_descriptor_rot_inv_path = '../data/kitti00_rotinv_lidar_descriptor.csv';
+pc_descriptor_path = '../data/kitti00_lidar_descriptor.csv';
+pc_pose_path = ;
 
-osm_descriptor_rot_inv_path = '/home/iris/git/graph_loc/data/kitti00_descriptor_360_rotinv.csv';
-osm_descriptor_path = '/home/iris/git/graph_loc/data/kitti00_descriptor_360.csv';
-osm_pose_path = '/home/iris/git/graph_loc/data/gps_kitti00.csv';
+osm_descriptor_rot_inv_path = '../data/kitti00_rotinv_osm_descriptor.csv';
+osm_descriptor_path = '../data/kitti00_osm_descriptor.csv';
+osm_pose_path = '../data/kitti00_osm_pose.csv';
 
 %% Load pose data
 files = dir(pc_pose_path);
@@ -46,10 +46,11 @@ for i = 1:length(files)
     pc_poses = [pc_poses; pc_lat, pc_lon];
 end
 
-osm_poses = csvread(osm_pose_path)';
+osm_poses = csvread(osm_pose_path);
 
 [pc_x, pc_y] = deg2utm(pc_poses(:,1), pc_poses(:,2));
-[osm_x, osm_y] = deg2utm(osm_poses(:,2), osm_poses(:,1));
+osm_x = osm_poses(:,1);
+osm_y = osm_poses(:,2);
 
 pc_descriptor_rot_inv = csvread(pc_descriptor_rot_inv_path);
 osm_descriptor_rot_inv = csvread(osm_descriptor_rot_inv_path);
@@ -98,6 +99,8 @@ for n = 1:N
     top_N = result_N(:,1:n);
     top_N_accuracy(n) = sum(sum(top_N,2) ~= 0)/length(matched_pair);
 end
+
+disp('Stage 1 finished!')
 
 %% compare_full_descriptor
 matched_pair_full = zeros(length(pc_descriptor_list), 3);
@@ -149,7 +152,6 @@ top_N_accuracy_full = zeros(1,N);
 for n = 1:N
     top_N_full = result_N_full(:,1:n);
     top_N_accuracy_full(n) = sum(sum(top_N_full,2) ~= 0)/length(matched_pair_full);
-    disp(['Top ', num2str(n), ' Accuracy: ', num2str(100 * top_N_accuracy_full(n)), '%'])
 end
 
 figure(1); clf; hold on; plot(pc_x, pc_y, 'black'); axis equal; title('KITTI 00', 'FontSize', 20);
@@ -165,4 +167,6 @@ ax = gca; ax.FontSize = 16;
 legend({'1 stage', '2 stages'}, 'Location', 'southeast')
 grid on; grid minor
 
-[top_N_accuracy_full(1) top_N_accuracy_full(5) top_N_accuracy_full(10)]
+disp(['Top  1', ' Accuracy: ', num2str(100 * top_N_accuracy_full(1)), '%'])
+disp(['Top  5', ' Accuracy: ', num2str(100 * top_N_accuracy_full(5)), '%'])
+disp(['Top 10', ' Accuracy: ', num2str(100 * top_N_accuracy_full(10)), '%'])

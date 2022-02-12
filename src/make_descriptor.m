@@ -34,10 +34,10 @@ for ii=1:length(seq_names)
     %% load files
     
     % osm
-    building_file_name = '../data/kitti00_buildings.geojson'; % building geojson file path
-    road_file_name = '../data/kitti00_roads.geojson'; % road geojson file path
-    osm_save_path = ; % OSM descriptor save path
-    osm_rotinv_save_path = ; % OSM rotation-invariant descriptor save path
+    building_file_name = strcat('../data/kitti', string(seq_name), '_buildings.geojson');% building geojson file path
+    road_file_name = strcat('../data/kitti', string(seq_name), '_roads.geojson'); % road geojson file path
+    osm_save_path = strcat('../data/kitti', string(seq_name), '_osm_descriptor.csv'); % OSM descriptor save path
+    osm_rotinv_save_path = strcat('../data/kitti', string(seq_name), '_osm_rotinv_descriptor.csv');  % OSM rotation-invariant descriptor save path
     
     fid = fopen(building_file_name);
     raw = fread(fid,inf);
@@ -53,8 +53,8 @@ for ii=1:length(seq_names)
     
     % lidar
     pc_path = ; % Building pointcloud path (folder)
-    lidar_save_path = ; % LiDAR descriptor save path 
-    lidar_rotinv_save_path = ; % LiDAR rotation-invariant descriptor save path
+    lidar_save_path = '../data/kitti00_lidar_descriptor.csv'; % LiDAR descriptor save path 
+    lidar_rotinv_save_path = '../data/kitti00_rotinv_lidar_descriptor.csv'; % LiDAR rotation-invariant descriptor save path
     
     files = dir(pc_path);
     files(1:2) = [];
@@ -86,7 +86,10 @@ for ii=1:length(seq_names)
             coords_x = [coords_x; x_coords_out_temp];
             coords_y = [coords_y; y_coords_out_temp];
         end
-    
+        coords = [coords_x, coords_y];
+        osm_pose_path = strcat('../data/kitti', string(seq_name), '_osm_pose.csv');
+        dlmwrite(osm_pose_path, coords, 'precision', 9);
+        
         x_coords_out = {};
         y_coords_out = {};
         for i = 1:length(val.features)
