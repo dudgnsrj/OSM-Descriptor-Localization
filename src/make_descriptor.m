@@ -37,7 +37,7 @@ for ii=1:length(seq_names)
     building_file_name = strcat('../data/kitti', string(seq_name), '_buildings.geojson');% building geojson file path
     road_file_name = strcat('../data/kitti', string(seq_name), '_roads.geojson'); % road geojson file path
     osm_save_path = strcat('../data/kitti', string(seq_name), '_osm_descriptor.csv'); % OSM descriptor save path
-    osm_rotinv_save_path = strcat('../data/kitti', string(seq_name), '_osm_rotinv_descriptor.csv');  % OSM rotation-invariant descriptor save path
+    osm_rotinv_save_path = strcat('../data/kitti', string(seq_name), '_rotinv_osm_descriptor.csv');  % OSM rotation-invariant descriptor save path
     
     fid = fopen(building_file_name);
     raw = fread(fid,inf);
@@ -53,8 +53,8 @@ for ii=1:length(seq_names)
     
     % lidar
     pc_path = ; % Building pointcloud path (folder)
-    lidar_save_path = '../data/kitti00_lidar_descriptor.csv'; % LiDAR descriptor save path 
-    lidar_rotinv_save_path = '../data/kitti00_rotinv_lidar_descriptor.csv'; % LiDAR rotation-invariant descriptor save path
+    lidar_save_path = strcat('../data/kitti', string(seq_name), '_lidar_descriptor.csv'); % LiDAR descriptor save path 
+    lidar_rotinv_save_path = strcat('../data/kitti', string(seq_name), '_rotinv_lidar_descriptor.csv'); % LiDAR rotation-invariant descriptor save path
     
     files = dir(pc_path);
     files(1:2) = [];
@@ -83,9 +83,27 @@ for ii=1:length(seq_names)
                 end
             end
             [x_coords_out_temp, y_coords_out_temp] = deg2utm(coords_out(:,2), coords_out(:,1));
-            coords_x = [coords_x; x_coords_out_temp];
-            coords_y = [coords_y; y_coords_out_temp];
+            
+            itp_coords_x = [];
+            itp_coords_y = [];
+            for j = 1:length(x_coords_out_temp)-1
+                x1 = x_coords_out_temp(j); x2 = x_coords_out_temp(j+1); dx = x1-x2;
+                y1 = y_coords_out_temp(j); y2 = y_coords_out_temp(j+1); dy = y1-y2;
+                itp_x = min(x1,x2):abs(dx/sqrt(dx^2+dy^2)):max(x1,x2); itp_x = [itp_x, max(x1,x2)];
+                if ~isempty(itp_coords_x)
+                    if itp_x(1) == itp_coords_x(end)
+                        itp_x = itp_x(2:end);
+                    end
+                end
+                itp_y = interp1(x_coords_out_temp, y_coords_out_temp, itp_x);
+                itp_coords_x = [itp_coords_x; itp_x'];
+                itp_coords_y = [itp_coords_y; itp_y'];
+            end
+            
+            coords_x = [coords_x; itp_coords_x];
+            coords_y = [coords_y; itp_coords_y];
         end
+
         coords = [coords_x, coords_y];
         osm_pose_path = strcat('../data/kitti', string(seq_name), '_osm_pose.csv');
         dlmwrite(osm_pose_path, coords, 'precision', 9);
@@ -129,7 +147,7 @@ for ii=1:length(seq_names)
                     y_coords_out_temp = y_coords_out{k};
 
                     distances = (x_coords_out_temp-x).^2 + (y_coords_out_temp-y).^2;
-                    if min(distances) > 3600
+                    if min(distances) > sensor_range^2
                         continue
                     end
 
@@ -201,11 +219,11 @@ for ii=1:length(seq_names)
         csvwrite(osm_save_path, descriptor);
 
         osm_descriptor_rot_inv = zeros(length(descriptor), sensor_range/bin_size);
-        for i = 1:length(descriptor)
-            range_angle_descriptor = zeros(360, sensor_range/bin_size);
+        for i = 1:size(descriptor, 1)
+            range_angle_descriptor = zeros(num_bin, sensor_range/bin_size);
 
             osm_descriptor = descriptor(i,:);
-            for j = 1:360
+            for j = 1:num_bin
                 if osm_descriptor(j) ~= 0
                     range_angle_descriptor(j,ceil(osm_descriptor(j)/bin_size)) = 1;
                 end
@@ -262,10 +280,10 @@ for ii=1:length(seq_names)
 
         pc_descriptor_rot_inv = zeros(length(descriptor_list), sensor_range/bin_size);
         for i = 1:length(descriptor_list)
-            range_angle_descriptor = zeros(360, sensor_range/bin_size);
+            range_angle_descriptor = zeros(num_bin, sensor_range/bin_size);
 
             pc_descriptor = descriptor_list(i,:);
-            for j = 1:360
+            for j = 1:num_bin
                 if pc_descriptor(j) ~= 0
                     range_angle_descriptor(j,ceil(pc_descriptor(j)/bin_size)) = 1;
                 end

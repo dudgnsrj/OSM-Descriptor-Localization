@@ -24,7 +24,7 @@ N = 200; % Top N
 %% File name
 pc_descriptor_rot_inv_path = '../data/kitti00_rotinv_lidar_descriptor.csv';
 pc_descriptor_path = '../data/kitti00_lidar_descriptor.csv';
-pc_pose_path = ;
+pc_pose_path = ; % path to kitti oxts
 
 osm_descriptor_rot_inv_path = '../data/kitti00_rotinv_osm_descriptor.csv';
 osm_descriptor_path = '../data/kitti00_osm_descriptor.csv';
