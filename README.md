@@ -1,5 +1,15 @@
 # OSM Descriptor Localization
 
+```
+@ARTICLE{ycho-2022-ral,
+    author = {Y. Cho, G. Kim, S. Lee, and J. Ryu},
+    journal = {IEEE Robotics and Automation Letters},
+    title = {OpenStreetMap-based LiDAR Global Localization in Urban Environment without a Prior LiDAR Map},
+    year = {2022},
+    note = {Accepted, to be appeared.}
+}
+```
+
 ## How To Use
 
 ### Data Preparation
@@ -14,6 +24,12 @@ Sequence: Drive
 08: 2011_09_30_drive_0028  
 09: 2011_09_30_drive_0033  
 10: 2011_09_30_drive_0034  
+
+00 includes 07
+05 includes 06
+09 includes 10
+
+Use {00, 05, 09} OSM descriptors for {07, 06, 10} LiDAR descriptors.
 ```
 
 ### Extract Building Pointcloud
