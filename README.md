@@ -1,5 +1,6 @@
 # OSM Descriptor Localization
 
+## Paper
 ```
 @ARTICLE{ycho-2022-ral,
     author = {Y. Cho, G. Kim, S. Lee, and J. Ryu},
@@ -14,6 +15,7 @@
 
 ### Data Preparation
 KITTI Raw Data: http://www.cvlibs.net/datasets/kitti/raw_data.php  
+KITTI-360: http://www.cvlibs.net/datasets/kitti-360/index.php
 ```
 Sequence: Drive  
 00: 2011_10_03_drive_0027  
@@ -29,12 +31,12 @@ Sequence: Drive
 05 includes 06
 09 includes 10
 
-Use {00, 05, 09} OSM descriptors for {07, 06, 10} LiDAR descriptors.
+Use {00, 05, 09} OSM descriptors to compare with {07, 06, 10} LiDAR descriptors.
 ```
 
 ### Extract Building Pointcloud
-SemanticKITTI Label (http://www.semantic-kitti.org/index.html)
-RangeNet++ (https://github.com/PRBonn/rangenet_lib)
+SemanticKITTI Label: http://www.semantic-kitti.org/index.html  
+RangeNet++: https://github.com/PRBonn/rangenet_lib
 - modified ```src/rangenet_lib/example/infer.cpp``` to apply to multiple files.
 
 ### Make Descriptors
