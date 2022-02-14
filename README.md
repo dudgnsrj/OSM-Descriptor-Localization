@@ -46,7 +46,7 @@ Run ```make_descriptor.m```
 ### Compare Descriptors
 Run ```compare_descriptor.m```
 - please fill ```27 pc_pose_path = ; % path to kitti oxts``` before run.
-- for KITTI 08, you should comment ```35 files(1:2) = [];```, and uncomment ```36 % files(1:1099) = []; % for sequence 08, use this (and comment out above)```. (KITTI 08 starts from 1100th frame.)
+- for KITTI 08, you should comment ```35 files(1:2) = [];```, and uncomment ```36 % files(1:1102) = []; % for sequence 08, use this (and comment out above)```. (KITTI 08 starts from 1100th frame.)
 
 ## Contact
 ```
