@@ -33,7 +33,7 @@ osm_pose_path = '../data/kitti00_osm_pose.csv';
 %% Load pose data
 files = dir(pc_pose_path);
 files(1:2) = [];
-% files(1:1099) = []; % for sequence 08, use this (and comment out above)
+% files(1:1102) = []; % for sequence 08, use this (and comment out above)
 files = {files(:).name};
 
 pc_poses = [];
@@ -46,11 +46,10 @@ for i = 1:length(files)
     pc_poses = [pc_poses; pc_lat, pc_lon];
 end
 
-osm_poses = csvread(osm_pose_path);
+osm_poses = csvread(osm_pose_path)';
 
 [pc_x, pc_y] = deg2utm(pc_poses(:,1), pc_poses(:,2));
-osm_x = osm_poses(:,1);
-osm_y = osm_poses(:,2);
+[osm_x, osm_y] = deg2utm(osm_poses(:,2), osm_poses(:,1));
 
 pc_descriptor_rot_inv = csvread(pc_descriptor_rot_inv_path);
 osm_descriptor_rot_inv = csvread(osm_descriptor_rot_inv_path);
