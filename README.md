@@ -2,13 +2,15 @@
 
 ## Paper
 ```
-@ARTICLE{ycho-2022-ral,
-    author = {Y. Cho, G. Kim, S. Lee, and J. Ryu},
-    journal = {IEEE Robotics and Automation Letters},
-    title = {OpenStreetMap-based LiDAR Global Localization in Urban Environment without a Prior LiDAR Map},
-    year = {2022},
-    note = {Accepted, to be appeared.}
-}
+@ARTICLE{9716862,
+  author={Cho, Younghun and Kim, Giseop and Lee, Sangmin and Ryu, Jee-Hwan},
+  journal={IEEE Robotics and Automation Letters}, 
+  title={OpenStreetMap-Based LiDAR Global Localization in Urban Environment Without a Prior LiDAR Map}, 
+  year={2022},
+  volume={7},
+  number={2},
+  pages={4999-5006},
+  doi={10.1109/LRA.2022.3152476}}
 ```
 
 ## How To Use
